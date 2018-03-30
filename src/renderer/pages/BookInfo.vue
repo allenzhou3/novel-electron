@@ -1,21 +1,26 @@
 <template>
     <div class="bookInfo">
-        <header v-if="!loading">
-            <div class="item-pic">
-                <img v-bind:src="data.imgUrl" v-bind:alt="data.title" v-bind:title="data.title">
-            </div>
-            <div class="item-info">
-                <h1>{{data.title}}</h1>
-                <p class="author">{{data.author}}</p>
-                <p class="updatetime">{{data.updatetime}}</p>
-                <p class="newchapter">{{data.newchapter}}</p>
-                <p class="intro">{{data.intro}}</p>
-            </div>
-        </header>
-        <section v-if="!loading">
-            <a v-for="item in data.chapters" @click="goto(item.url)">{{item.title}}</a>
-        </section>
-        <van-loading color="black" v-if="loading"/>
+        <div class="con">
+            <div class="block-title"><h2 class="title">BookInfo</h2></div>
+            <header v-if="!loading">
+                <div class="item-pic">
+                    <img v-bind:src="data.imgUrl" v-bind:alt="data.title" v-bind:title="data.title">
+                </div>
+                <div class="item-info">
+                    <div class="desc">
+                        <h1>{{data.title}}</h1>
+                        <p class="author">{{data.author}}</p>
+                        <p class="updatetime">{{data.updatetime}}</p>
+                        <p class="newchapter">{{data.newchapter}}</p>
+                    </div>
+                    <p class="intro">{{data.intro}}</p>
+                </div>
+            </header>
+            <section v-if="!loading">
+                <a v-for="item in data.chapters" @click="goto(item.url)">{{item.title}}</a>
+            </section>
+            <van-loading color="black" v-if="loading"/>
+        </div>
     </div>
 </template>
 
@@ -66,71 +71,52 @@
 </script>
 
 <style lang="scss" scoped>
-    @function px2rem($px) {
-        @return $px / 100 * 1rem;
-    }
-
-    .bookInfo {
-        padding: px2rem(15);
-    }
-
     header {
         display: flex;
-        padding-bottom: px2rem(15);
-        border-bottom: 1px solid #BCC3CC;
+        padding-top: 60px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f5f5f5;
     }
 
     .item-pic {
-        width: 30%;
-        img{
+        width: 200px;
+        img {
             display: block;
-            width: 100%;
+            width: 200px;
             height: auto;
         }
     }
 
     .item-info {
-        width: 70%;
         display: flex;
-        padding-left: px2rem(15);
+        padding-left: 15px;
         flex-direction: column;
         justify-content: space-between;
+        line-height: 1.6;
         h1 {
-            font-size: px2rem(20);
+            font-size: 20px;
         }
         .author {
-            font-size: px2rem(15);
+            font-size: 15px;
         }
         .updatetime {
-            font-size: px2rem(11);
+            font-size: 11px;
             color: #d32f2f;
         }
         .newchapter {
             color: #d32f2f;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-        }
-        .intro {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
         }
     }
 
     section {
-        padding-top: px2rem(15);
+        padding-top: 15px;
         display: flex;
         flex-wrap: wrap;
         a {
             display: block;
-            width: 50%;
-            height: px2rem(36);
-            line-height: px2rem(36);
+            width: 33.333333%;
+            height: 36px;
+            line-height: 36px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -142,9 +128,9 @@
         display: flex;
         flex-wrap: wrap;
         .cover {
-            margin-bottom: px2rem(15);
-            width: px2rem(120);
-            height: px2rem(160);
+            margin-bottom: 15px;
+            width: 120px;
+            height: 160px;
             img {
                 position: relative;
                 display: block;
@@ -163,18 +149,18 @@
                 top: 0;
                 left: 0;
                 background-color: rgb(220, 220, 220);
-                font-size: px2rem(18);
+                font-size: 18px;
             }
         }
         .intro {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            margin-bottom: px2rem(15);
-            padding-left: px2rem(15);
+            margin-bottom: 15px;
+            padding-left: 15px;
             width: calc(100% - 120px);
             h2 {
-                font-size: px2rem(16);
+                font-size: 16px;
                 color: #333;
             }
             span {

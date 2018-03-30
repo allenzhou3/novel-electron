@@ -1,33 +1,36 @@
 <template>
     <div class="sort">
-        <header>
-            <div class="type">
-                <a class="active" @click="changeType('male')">男生</a>
-                <a @click="changeType('female')">女生</a>
-            </div>
+        <div class="con">
+            <h2 class="title">排行榜</h2>
+            <header>
+                <div class="type">
+                    <a class="active" @click="changeType('male')">男生</a>
+                    <a @click="changeType('female')">女生</a>
+                </div>
 
-            <div class="sortType">
-                <a class="active" @click="changeSortType('hot')">最热榜</a>
-                <a @click="changeSortType('best')">好评榜</a>
-                <a @click="changeSortType('hotsearch')">热搜榜</a>
-                <a @click="changeSortType('potential')">潜力榜</a>
-                <a @click="changeSortType('keep')">留存榜</a>
-                <a @click="changeSortType('finish')">完结榜</a>
-            </div>
-        </header>
-        <section>
-            <div class="item" v-for="item in data" @click="goto(item.title)">
-                <div class="itempic">
-                    <img v-lazy="item.cover">
+                <div class="sortType">
+                    <a class="active" @click="changeSortType('hot')">最热榜</a>
+                    <a @click="changeSortType('best')">好评榜</a>
+                    <a @click="changeSortType('hotsearch')">热搜榜</a>
+                    <a @click="changeSortType('potential')">潜力榜</a>
+                    <a @click="changeSortType('keep')">留存榜</a>
+                    <a @click="changeSortType('finish')">完结榜</a>
                 </div>
-                <div class="itemintro">
-                    <h2 class="name">{{item.title}}</h2>
-                    <p class="item-author">{{item.author}}</p>
-                    <p class="shortIntro">{{item.shortIntro}}</p>
-                    <p class="rate"><span>{{item.latelyFollower}}</span>人气 | <span>{{item.retentionRatio}}</span>读者留存</p>
+            </header>
+            <section>
+                <div class="item" v-for="item in data" @click="goto(item.title)">
+                    <div class="itempic">
+                        <img v-lazy="item.cover">
+                    </div>
+                    <div class="itemintro">
+                        <h2 class="name">{{item.title}}</h2>
+                        <p class="item-author">{{item.author}}</p>
+                        <p class="shortIntro">{{item.shortIntro}}</p>
+                        <p class="rate"><span>{{item.latelyFollower}}</span>人气 | <span>{{item.retentionRatio}}</span>读者留存</p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </div>
 </template>
 
@@ -129,20 +132,45 @@
 </script>
 
 <style lang="scss" scoped>
-    @function px2rem($px) {
-        @return $px / 100 * 1rem;
-    }
 
     .sort {
         position: relative;
         width: 100vw;
         height: 100vh;
+        .con{
+            position: relative;
+            padding: 0 15px;
+            min-height: 100vh;
+            background-color: #fff;
+        }
+        .title {
+            display: inline-block;
+            position: relative;
+            margin: 15px 0 0 -25px;
+            padding: 10px 20px 10px 78px;
+            background-color: #ffcd38;
+            color: #fff;
+            line-height: 1.1em;
+            font-weight: 500;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, .1);
+            &:after {
+                display: block;
+                content: '';
+                width: 10px;
+                height: 10px;
+                position: absolute;
+                left: 0;
+                bottom: -10px;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid #ebbd34;
+            }
+        }
     }
 
     header {
         background-color: #fff;
         a {
-            margin-right: px2rem(15);
+            margin-right: 15px;
             color: #666;
             transition: all .25s linear;
             &.active {
@@ -152,9 +180,9 @@
     }
 
     .type, .sortType {
-        height: px2rem(48);
-        line-height: px2rem(48);
-        padding: 0 px2rem(15);
+        height: 48px;
+        line-height: 48px;
+        padding: 0 15px;
     }
 
     .type {
@@ -162,30 +190,30 @@
     }
 
     section {
-        padding: 0 px2rem(15);
+        padding: 0 15px;
     }
 
     .item {
         display: flex;
         flex-direction: row;
-        padding: px2rem(15) 0;
+        padding: 15px 0;
         border-bottom: 1px solid rgb(220, 220, 220);
         .itempic {
             img {
                 display: block;
-                width: px2rem(70);
-                height: px2rem(100);
+                width: 70px;
+                height: 100px;
             }
         }
         .itemintro {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding-left: px2rem(15);
+            padding-left: 15px;
             flex: auto;
             overflow: hidden;
             .name {
-                font-size: px2rem(15);
+                font-size: 15px;
             }
             .author {
                 color: #999;

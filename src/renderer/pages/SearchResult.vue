@@ -1,18 +1,21 @@
 <template>
-    <div class="search">
-        <van-list v-model="showQuery" loading="loading">
-            <van-cell-group>
-                <van-cell v-for="(item,key) in data" @click="goto(item.title,item.url)" :key="key">
-                    <div class="item-pic"><img v-lazy="item.imgUrl"></div>
-                    <div class="item-info">
-                        <h3>{{item.title}}</h3>
-                        <p>{{item.author}}</p>
-                        <p>{{item.desc}}</p>
-                    </div>
-                </van-cell>
-            </van-cell-group>
-        </van-list>
-    </div>
+    <section class="search">
+        <section class="con">
+            <div class="block-title">
+                <h2 class="title">Search Result</h2>
+            </div>
+            <div class="list" v-for="(item,key) in data" :key="key" @click="goto(item.title,item.url)">
+                <div class="item-pic"><img v-lazy="item.imgUrl"></div>
+                <div class="item-info">
+                    <h3>{{item.title}}</h3>
+                    <p>{{item.author}}</p>
+                    <p>{{item.desc}}</p>
+                </div>
+            </div>
+            <van-loading color="black" v-if="loading"/>
+            <div class="empty" v-if="empty">Sorry，没有搜到</div>
+        </section>
+    </section>
 </template>
 
 <script>
@@ -20,13 +23,14 @@
         name: "searchResult",
         data() {
             return {
-                key: "",
+                key: '',
                 data: [],
                 loading: false,
-                showQuery: false
+                empty: false
             };
         },
         created() {
+            this.$set(this, "key", this.$route.params.key);
             this.initPage();
         },
         methods: {
@@ -36,19 +40,23 @@
                         methods: "POST",
                         url: "https://api.steps.info/searchResult",
                         params: {
-                            text: this.key||this.$route.params.key
+                            text: this.key
                         }
                     }
                 ).then(res => {
                     this.loading = false;
                     if (res.data.result === 1) {
-                        this.$set(this, "data", res.data.data);
-                        this.showQuery = true;
+                        if (res.data.data.length === 0) {
+                            this.empty = true;
+                        } else {
+                            this.$set(this, "data", res.data.data);
+                        }
                     } else {
-
+                        this.empty = true;
                     }
                 }).catch(err => {
                     this.loading = false;
+                    this.empty = true;
                 })
             },
             goto(title, url) {
@@ -65,25 +73,33 @@
 </script>
 
 <style lang="scss" scoped>
-    @function px2rem($px) {
-        @return $px / 100 * 1rem;
+    .con {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
 
-    .search {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        -webkit-overflow-scrolling: touch;
+    .block-title {
+        margin-bottom: 45px;
+        width: 100%;
     }
 
-    .van-list {
-        -webkit-overflow-scrolling: touch;
+    .list {
+        display: flex;
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        width: 47.5%;
+        &:nth-of-type(2n) {
+            margin-right: 0;
+        }
         .item-pic {
-            margin-right: px2rem(7.5);
-            width: px2rem(60);
+            margin-right: 15px;
+            width: 60px;
             img {
                 display: block;
-                width: px2rem(60);
+                width: 60px;
                 height: auto;
             }
         }
@@ -91,11 +107,11 @@
             width: auto;
             line-height: 1.6;
             h3 {
-                font-size: px2rem(15);
+                font-size: 15px;
                 color: #d32f2f;
             }
             p:first-child {
-                font-size: px2rem(11);
+                font-size: 11px;
             }
             p:last-child {
                 overflow: hidden;
@@ -103,9 +119,8 @@
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
-                font-size: px2rem(13);
+                font-size: 13px;
             }
         }
     }
-
 </style>

@@ -1,37 +1,40 @@
 <template>
     <div class="catlist">
-        <header>
-            <div class="type"><a class="active" @click="changeType('hot',$event)">热门</a><a
-                @click="changeType('new',$event)">新书</a><a
-                @click="changeType('reputation',$event)">好评</a><a @click="changeType('over',$event)">完结</a></div>
-            <div class="minor"><a class="active" @click="changeMinor('',$event)">全部</a><a
-                @click="changeMinor('东方玄幻',$event)">东方玄幻</a><a
-                @click="changeMinor('异界大陆',$event)">异界大陆</a><a @click="changeMinor('异界争霸',$event)">异界争霸</a><a
-                @click="changeMinor('远古神话',$event)">远古神话</a>
-            </div>
-        </header>
-        <section class="items">
-            <vue-data-loading :loading="fetching" :completed="completed"
-                              :listens="['infinite-scroll', 'pull-up']"
-                              :init-scroll="false" @infinite-scroll="infiniteScroll" @pull-up="pullUp">
-                <div class="item" v-for="item in data" @click="gotoBook(item.title,item.id)">
-                    <div class="itempic"><img v-lazy="item.cover"></div>
-                    <div class="itemintro">
-                        <h2 class="name">{{item.title}}</h2>
-                        <p class="author">{{item.author}}</p>
-                        <p class="shortIntro">{{item.shortIntro}}</p>
-                        <p class="rate"><span>{{item.latelyFollower}}</span>人气 | <span>{{item.retentionRatio}}</span>读者留存
-                        </p>
-                    </div>
+        <div class="con">
+            <div class="block-title"><h2 class="title">Catgories List</h2></div>
+            <header>
+                <div class="type"><a class="active" @click="changeType('hot',$event)">热门</a><a
+                        @click="changeType('new',$event)">新书</a><a
+                        @click="changeType('reputation',$event)">好评</a><a @click="changeType('over',$event)">完结</a>
                 </div>
-            </vue-data-loading>
-            <Loading v-if="loading"></Loading>
-        </section>
+                <div class="minor"><a class="active" @click="changeMinor('',$event)">全部</a><a
+                        @click="changeMinor('东方玄幻',$event)">东方玄幻</a><a
+                        @click="changeMinor('异界大陆',$event)">异界大陆</a><a @click="changeMinor('异界争霸',$event)">异界争霸</a><a
+                        @click="changeMinor('远古神话',$event)">远古神话</a>
+                </div>
+            </header>
+            <section class="items">
+                <vue-data-loading :loading="fetching" :completed="completed"
+                                  :listens="['infinite-scroll', 'pull-up']"
+                                  :init-scroll="true" @infinite-scroll="infiniteScroll" @pull-up="pullUp">
+                    <div class="item" v-for="item in data" @click="gotoBook(item.title,item.id)">
+                        <div class="itempic"><img v-lazy="item.cover"></div>
+                        <div class="itemintro">
+                            <h2 class="name">{{item.title}}</h2>
+                            <p class="author">{{item.author}}</p>
+                            <p class="shortIntro">{{item.shortIntro}}</p>
+                            <p class="rate"><span>{{item.latelyFollower}}</span>人气 |
+                                <span>{{item.retentionRatio}}</span>读者留存
+                            </p>
+                        </div>
+                    </div>
+                </vue-data-loading>
+            </section>
+        </div>
     </div>
 </template>
 
 <script>
-    import Loading from "../components/Loading"
     import VueDataLoading from 'vue-data-loading'
 
     export default {
@@ -43,25 +46,22 @@
                 minor: "",
                 start: 0,
                 limit: 20,
-                loading: false,
                 isEmpty: false,
                 fetching: false,
                 completed: false,
             }
         },
         components: {
-            Loading,
             VueDataLoading
         },
         created() {
-            this.fetchData();
+            // this.fetchData();
         },
         methods: {
             fetchData(type = "hot", minor = "东方玄幻", loadMore = false) {
                 if (loadMore) {
                     this.fetching = true;
                 } else {
-                    this.loading = true;
                     this.data = [];
                 }
                 this.$axios({
@@ -76,6 +76,7 @@
                         limit: this.limit
                     }
                 }).then(res => {
+                    console.log(res)
                     if (res.data.result === 1) {
                         Array.prototype.forEach.call(res.data.data, (v, k) => {
                             v.cover = decodeURIComponent(v.cover.replace(/\/agent\//ig, ""));
@@ -91,7 +92,6 @@
                             }
                         } else {
                             setTimeout(() => {
-                                this.loading = false;
                                 this.$set(this, "data", res.data.data);
                             }, 1000);
                         }
@@ -142,19 +142,13 @@
 </script>
 
 <style lang="scss" scoped>
-    @function px2rem($px) {
-        @return $px / 100 * 1rem;
-    }
-
-    .catlist {
-        min-height: 100vh;
-        background-color: #eee;
+    .block-title {
+        margin-bottom: 30px;
     }
 
     header {
-        background-color: #fff;
         a {
-            margin-right: px2rem(15);
+            margin-right: 15px;
             color: #666;
             transition: all .25s linear;
             &.active {
@@ -164,9 +158,9 @@
     }
 
     .type, .minor {
-        height: px2rem(48);
-        line-height: px2rem(48);
-        padding: 0 px2rem(15);
+        height: 48px;
+        line-height: 48px;
+        padding: 0 15px;
     }
 
     .type {
@@ -174,30 +168,30 @@
     }
 
     .items {
-        padding: 0 px2rem(15);
+        padding: 0 15px;
     }
 
     .item {
         display: flex;
         flex-direction: row;
-        padding: px2rem(15) 0;
+        padding: 15px 0;
         border-bottom: 1px solid rgb(220, 220, 220);
         .itempic {
             img {
                 display: block;
-                width: px2rem(70);
-                height: px2rem(100);
+                width: 70px;
+                height: 100px;
             }
         }
         .itemintro {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding-left: px2rem(15);
+            padding-left: 15px;
             flex: auto;
             overflow: hidden;
             .name {
-                font-size: px2rem(15);
+                font-size: 15px;
             }
             .author {
                 color: #999;
